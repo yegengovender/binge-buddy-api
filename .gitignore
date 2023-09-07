@@ -1,3 +1,10 @@
 .vscode
-bin/
-obj/
+bin
+obj
+bin/Debug/net7.0/binge-buddy-api.dll
+bin/Debug/net7.0/binge-buddy-api.pdb
+obj/Debug/net7.0/binge-buddy-api.csproj.CoreCompileInputs.cache
+obj/Debug/net7.0/binge-buddy-api.dll
+obj/Debug/net7.0/binge-buddy-api.pdb
+obj/Debug/net7.0/ref/binge-buddy-api.dll
+obj/Debug/net7.0/refint/binge-buddy-api.dll

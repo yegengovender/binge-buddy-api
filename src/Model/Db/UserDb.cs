@@ -9,6 +9,5 @@ class UserDb : DbContext
     public DbSet<Show> Shows => Set<Show>();
     public DbSet<TvEpisode> TvEpisodes => Set<TvEpisode>();
     public DbSet<Season> Seasons => Set<Season>();
-    // public DbSet<UserShow> UserShows => Set<UserShow>();
-    // public DbSet<ShowsProgress> ShowsProgress => Set<ShowsProgress>();
+    public DbSet<UserShowActivity> UserShowActivity => Set<UserShowActivity>();
 }

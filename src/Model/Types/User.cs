@@ -47,9 +47,15 @@ public class TvEpisode
     public float Rating { get; set; }
     public string Image { get; set; } = "";
     public string Summary { get; set; } = "";
-    public int ShowId { get; set; }
+    // public int ShowId { get; set; }
     [ForeignKey("ShowId")]
     public Show Show { get; set; }
     public string WatchedDate { get; set; } = "";
+}
 
+public class UserShowActivity {
+    public int Id { get; set; }
+    public User User { get; set; }
+    public TvEpisode Episode { get; set; }
+    public DateTime Updated { get; set; }
 }
