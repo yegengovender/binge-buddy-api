@@ -74,7 +74,12 @@ app.MapPost("/users/{id}/shows", async (UserDb db, int id, Show show) =>
     {
         return Results.NotFound();
     }
-    user.Shows?.Append(show);
+
+//    await db.Shows.AddAsync(show);
+    
+    user.Shows ??= new List<Show>();
+
+    user.Shows.Add(show);
     await db.SaveChangesAsync();
     return Results.Ok(user.Shows?.ToList());
 });

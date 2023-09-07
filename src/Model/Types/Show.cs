@@ -31,10 +31,10 @@ public class Show
     public string? ImageLarge { get; set; }
 
     [JsonProperty("episodes")]
-    public IEnumerable<TvEpisode> Episodes { get; set; }
+    public ICollection<TvEpisode> Episodes { get; set; }
 
     [JsonProperty("seasons")]
-    public IEnumerable<Season> Seasons { get; set; }
+    public ICollection<Season> Seasons { get; set; }
 
     [JsonProperty("nextEpisode")]
     public TvEpisode? NextEpisode { get; set; }

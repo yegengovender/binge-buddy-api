@@ -94,7 +94,7 @@ namespace binge_buddy_api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Show");
+                    b.ToTable("Shows");
                 });
 
             modelBuilder.Entity("ShowsProgress", b =>
@@ -165,7 +165,7 @@ namespace binge_buddy_api.Migrations
 
                     b.HasIndex("ShowId");
 
-                    b.ToTable("TvEpisode");
+                    b.ToTable("TvEpisodes");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -207,7 +207,7 @@ namespace binge_buddy_api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserShow");
+                    b.ToTable("UserShows");
                 });
 
             modelBuilder.Entity("Season", b =>

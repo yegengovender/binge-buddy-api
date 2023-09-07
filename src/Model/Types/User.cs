@@ -16,9 +16,9 @@ public class User
     public bool LoggedIn { get; set; }
 
     [JsonProperty("shows")]
-    public IEnumerable<Show>? Shows { get; set; }
+    public ICollection<Show>? Shows { get; set; }
 
     [JsonProperty("userShows")]
-    public IEnumerable<UserShow>? UserShows { get; set; }
+    public ICollection<UserShow>? UserShows { get; set; }
 
 }
