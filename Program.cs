@@ -34,55 +34,55 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/users", async (UserDb db) =>
-{
-    var users = await db.Users.ToListAsync();
-    return Results.Ok(users);
-});
+// app.MapGet("/users", async (UserDb db) =>
+// {
+//     var users = await db.Users.ToListAsync();
+//     return Results.Ok(users);
+// });
 
-app.MapGet("/users/{id}", async (UserDb db, int id) =>
-{
-    var user = await db.Users.FindAsync(id);
-    if (user is null)
-    {
-        return Results.NotFound();
-    }
-    return Results.Ok(user);
-});
+// app.MapGet("/users/{id}", async (UserDb db, int id) =>
+// {
+//     var user = await db.Users.FindAsync(id);
+//     if (user is null)
+//     {
+//         return Results.NotFound();
+//     }
+//     return Results.Ok(user);
+// });
 
-app.MapPost("/users", async (UserDb db, [FromBody] User user) =>
-{
-    await db.Users.AddAsync(user);
-    await db.SaveChangesAsync();
-    return Results.Created($"/users/{user.Id}", user);
-});
+// app.MapPost("/users", async (UserDb db, [FromBody] User user) =>
+// {
+//     await db.Users.AddAsync(user);
+//     await db.SaveChangesAsync();
+//     return Results.Created($"/users/{user.Id}", user);
+// });
 
-app.MapGet("/users/{id}/shows", async (UserDb db, int id) =>
-{
-    var user = await db.Users.FindAsync(id);
-    if (user is null)
-    {
-        return Results.NotFound();
-    }
-    return Results.Ok(user.Shows?.ToList());
-});
+// app.MapGet("/users/{id}/shows", async (UserDb db, int id) =>
+// {
+//     var user = await db.Users.FindAsync(id);
+//     if (user is null)
+//     {
+//         return Results.NotFound();
+//     }
+//     return Results.Ok(user.Shows?.ToList());
+// });
 
-app.MapPost("/users/{id}/shows", async (UserDb db, int id, Show show) =>
-{
-    var user = await db.Users.FindAsync(id);
-    if (user is null)
-    {
-        return Results.NotFound();
-    }
+// app.MapPost("/users/{id}/shows", async (UserDb db, int id, Show show) =>
+// {
+//     var user = await db.Users.FindAsync(id);
+//     if (user is null)
+//     {
+//         return Results.NotFound();
+//     }
 
-//    await db.Shows.AddAsync(show);
+// //    await db.Shows.AddAsync(show);
     
-    user.Shows ??= new List<Show>();
+//     user.Shows ??= new List<Show>();
 
-    user.Shows.Add(show);
-    await db.SaveChangesAsync();
-    return Results.Ok(user.Shows?.ToList());
-});
+//     user.Shows.Add(show);
+//     await db.SaveChangesAsync();
+//     return Results.Ok(user.Shows?.ToList());
+// });
 
 app.MapGet("/", () => "Hello World!");
 
