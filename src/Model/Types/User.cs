@@ -34,6 +34,7 @@ public class Show
     [NotMapped]
     public TvEpisode? NextEpisode { get; set; }
     public IEnumerable<TvEpisode> TvEpisodes { get; set; }
+    public IEnumerable<Season> Seasons { get; set; }
 }
 
 public class Season
@@ -45,8 +46,10 @@ public class Season
     public int EpisodeOrder { get; set; }
     public string PremiereDate { get; set; } = ""; // : string;
     public string EndDate { get; set; } = ""; // : string;
+    public int ShowId { get; set; }
+    [ForeignKey("ShowId")]
+    [JsonIgnore]
     public Show Show { get; set; }
-
 }
 
 public class TvEpisode

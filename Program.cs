@@ -52,7 +52,10 @@ app.MapPost("/users", async (UserDb db, [FromBody] User user) =>
 // SHOW
 app.MapGet("/shows", async (UserDb db) =>
 {
-    var shows = await db.Shows.ToListAsync();
+    var shows = await db.Shows
+    .Include(s => s.TvEpisodes)
+    .Include(s => s.Seasons)
+    .ToListAsync();
     return Results.Ok(shows);
 });
 
@@ -63,16 +66,37 @@ app.MapPost("/shows", async (UserDb db, [FromBody] Show show) =>
     return Results.Created($"/shows/{show.Id}", show);
 });
 
+// SEASON
+app.MapGet("/seasons", async (UserDb db) =>
+{
+    var seasons = await db.Seasons.Include(e => e.Show).ToListAsync();
+    return Results.Ok(seasons);
+});
+
+app.MapPost("/seasons", async (UserDb db, [FromBody] Season season) =>
+{
+    var show = await db.Shows.FindAsync(season.ShowId);
+    if (show is null)
+    {
+        return Results.NotFound();
+    }
+
+    season.Show = show;
+    await db.Seasons.AddAsync(season);
+    await db.SaveChangesAsync();
+    return Results.Created($"/seasons/{season.Id}", season);
+});
+
 // EPISODE
 app.MapGet("/episodes", async (UserDb db) =>
 {
-    var episodes = await db.TvEpisodes.Include(e=>e.Show).ToListAsync();
+    var episodes = await db.TvEpisodes.Include(e => e.Show).ToListAsync();
     return Results.Ok(episodes);
 });
 
 app.MapPost("/episodes", async (UserDb db, [FromBody] TvEpisode episode) =>
 {
-    var show = await db.Shows.FindAsync(episode.ShowId);    
+    var show = await db.Shows.FindAsync(episode.ShowId);
     if (show is null)
     {
         return Results.NotFound();
