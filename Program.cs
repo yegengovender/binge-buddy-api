@@ -57,6 +57,28 @@ app.MapPost("/users", async (UserDb db, [FromBody] User user) =>
     return Results.Created($"/users/{user.Id}", user);
 });
 
+app.MapGet("/users/{id}/shows", async (UserDb db, int id) =>
+{
+    var user = await db.Users.FindAsync(id);
+    if (user is null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(user.Shows?.ToList());
+});
+
+app.MapPost("/users/{id}/shows", async (UserDb db, int id, Show show) =>
+{
+    var user = await db.Users.FindAsync(id);
+    if (user is null)
+    {
+        return Results.NotFound();
+    }
+    user.Shows?.Append(show);
+    await db.SaveChangesAsync();
+    return Results.Ok(user.Shows?.ToList());
+});
+
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
