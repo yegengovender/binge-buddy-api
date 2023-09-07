@@ -9,12 +9,13 @@ public class User
     public bool LoggedIn { get; set; }
 }
 
-public class UserShow {
+public class UserShow
+{
     public int Id { get; set; }
-    
+
     [ForeignKey("UserId")]
     public User User { get; set; }
-    
+
     [ForeignKey("ShowId")]
     public Show Show { get; set; }
 }
@@ -30,7 +31,9 @@ public class Show
     public float Rating { get; set; }
     public string Image { get; set; } = "";
     public string ImageLarge { get; set; } = "";
+    [NotMapped]
     public TvEpisode? NextEpisode { get; set; }
+    public IEnumerable<TvEpisode> TvEpisodes { get; set; }
 }
 
 public class Season
@@ -42,8 +45,6 @@ public class Season
     public int EpisodeOrder { get; set; }
     public string PremiereDate { get; set; } = ""; // : string;
     public string EndDate { get; set; } = ""; // : string;
-    
-    [ForeignKey("ShowId")]
     public Show Show { get; set; }
 
 }
@@ -59,20 +60,22 @@ public class TvEpisode
     public float Rating { get; set; }
     public string Image { get; set; } = "";
     public string Summary { get; set; } = "";
-    
+    public int ShowId { get; set; }
     [ForeignKey("ShowId")]
+    [JsonIgnore]
     public Show Show { get; set; }
-    
+
     [JsonIgnore]
     public string WatchedDate { get; set; } = "";
 }
 
-public class UserShowActivity {
+public class UserShowActivity
+{
     public int Id { get; set; }
-    
+
     [ForeignKey("UserId")]
     public User User { get; set; }
-    
+
     [ForeignKey("TvEpisodeId")]
     public TvEpisode Episode { get; set; }
     public DateTime Updated { get; set; }

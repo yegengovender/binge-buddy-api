@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.ObjectPool;
 using Microsoft.OpenApi.Models;
 using System;
 
@@ -65,12 +66,19 @@ app.MapPost("/shows", async (UserDb db, [FromBody] Show show) =>
 // EPISODE
 app.MapGet("/episodes", async (UserDb db) =>
 {
-    var episodes = await db.TvEpisodes.ToListAsync();
+    var episodes = await db.TvEpisodes.Include(e=>e.Show).ToListAsync();
     return Results.Ok(episodes);
 });
 
 app.MapPost("/episodes", async (UserDb db, [FromBody] TvEpisode episode) =>
 {
+    var show = await db.Shows.FindAsync(episode.ShowId);    
+    if (show is null)
+    {
+        return Results.NotFound();
+    }
+
+    episode.Show = show;
     await db.TvEpisodes.AddAsync(episode);
     await db.SaveChangesAsync();
     return Results.Created($"/episodes/{episode.Id}", episode);

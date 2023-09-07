@@ -11,4 +11,12 @@ class UserDb : DbContext
     public DbSet<TvEpisode> TvEpisodes => Set<TvEpisode>();
     public DbSet<Season> Seasons => Set<Season>();
     public DbSet<UserShowActivity> UserShowActivity => Set<UserShowActivity>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TvEpisode>()
+            .HasOne(e=>e.Show)
+            .WithMany(s=>s.TvEpisodes)
+            .HasForeignKey(e=>e.ShowId);
+    }
 }
