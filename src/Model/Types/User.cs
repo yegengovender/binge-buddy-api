@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 public class User
 {
@@ -6,7 +7,16 @@ public class User
     public string Name { get; set; } = "";
     public string Email { get; set; } = "";
     public bool LoggedIn { get; set; }
-    public IEnumerable<Show> Shows { get; set; } = new List<Show>();
+}
+
+public class UserShow {
+    public int Id { get; set; }
+    
+    [ForeignKey("UserId")]
+    public User User { get; set; }
+    
+    [ForeignKey("ShowId")]
+    public Show Show { get; set; }
 }
 
 public class Show
@@ -52,6 +62,8 @@ public class TvEpisode
     
     [ForeignKey("ShowId")]
     public Show Show { get; set; }
+    
+    [JsonIgnore]
     public string WatchedDate { get; set; } = "";
 }
 

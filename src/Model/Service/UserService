@@ -1,0 +1,25 @@
+public class UserService
+{
+    private readonly DbContext _context;
+    public UserService(DbContext context) => _context = context;
+
+public async Task<User> GetUser(int id)
+{
+    var user = await _context.Users
+        .Include(u => u.Shows)
+        .ThenInclude(s => s.Seasons)
+        .ThenInclude(s => s.Episodes)
+        .FirstOrDefaultAsync(u => u.Id == id);
+    if (user == null)
+    {
+        throw new Exception("User not found");
+    }
+    return user;
+}
+
+public async Task<User> CreateUser(User user)
+{
+    await _context.Users.AddAsync(user);
+    await _context.SaveChangesAsync();
+    return user;
+}

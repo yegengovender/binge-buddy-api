@@ -34,11 +34,47 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// app.MapGet("/users", async (UserDb db) =>
-// {
-//     var users = await db.Users.ToListAsync();
-//     return Results.Ok(users);
-// });
+// USER
+app.MapGet("/users", async (UserDb db) =>
+{
+    var users = await db.Users.ToListAsync();
+    return Results.Ok(users);
+});
+
+app.MapPost("/users", async (UserDb db, [FromBody] User user) =>
+{
+    await db.Users.AddAsync(user);
+    await db.SaveChangesAsync();
+    return Results.Created($"/users/{user.Id}", user);
+});
+
+// SHOW
+app.MapGet("/shows", async (UserDb db) =>
+{
+    var shows = await db.Shows.ToListAsync();
+    return Results.Ok(shows);
+});
+
+app.MapPost("/shows", async (UserDb db, [FromBody] Show show) =>
+{
+    await db.Shows.AddAsync(show);
+    await db.SaveChangesAsync();
+    return Results.Created($"/shows/{show.Id}", show);
+});
+
+// EPISODE
+app.MapGet("/episodes", async (UserDb db) =>
+{
+    var episodes = await db.TvEpisodes.ToListAsync();
+    return Results.Ok(episodes);
+});
+
+app.MapPost("/episodes", async (UserDb db, [FromBody] TvEpisode episode) =>
+{
+    await db.TvEpisodes.AddAsync(episode);
+    await db.SaveChangesAsync();
+    return Results.Created($"/episodes/{episode.Id}", episode);
+});
 
 // app.MapGet("/users/{id}", async (UserDb db, int id) =>
 // {
@@ -50,12 +86,6 @@ app.UseSwaggerUI();
 //     return Results.Ok(user);
 // });
 
-// app.MapPost("/users", async (UserDb db, [FromBody] User user) =>
-// {
-//     await db.Users.AddAsync(user);
-//     await db.SaveChangesAsync();
-//     return Results.Created($"/users/{user.Id}", user);
-// });
 
 // app.MapGet("/users/{id}/shows", async (UserDb db, int id) =>
 // {
@@ -76,7 +106,7 @@ app.UseSwaggerUI();
 //     }
 
 // //    await db.Shows.AddAsync(show);
-    
+
 //     user.Shows ??= new List<Show>();
 
 //     user.Shows.Add(show);
