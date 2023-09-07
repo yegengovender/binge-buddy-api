@@ -32,6 +32,8 @@ public class Season
     public int EpisodeOrder { get; set; }
     public string PremiereDate { get; set; } = ""; // : string;
     public string EndDate { get; set; } = ""; // : string;
+    
+    [ForeignKey("ShowId")]
     public Show Show { get; set; }
 
 }
@@ -47,7 +49,7 @@ public class TvEpisode
     public float Rating { get; set; }
     public string Image { get; set; } = "";
     public string Summary { get; set; } = "";
-    // public int ShowId { get; set; }
+    
     [ForeignKey("ShowId")]
     public Show Show { get; set; }
     public string WatchedDate { get; set; } = "";
@@ -55,7 +57,11 @@ public class TvEpisode
 
 public class UserShowActivity {
     public int Id { get; set; }
+    
+    [ForeignKey("UserId")]
     public User User { get; set; }
+    
+    [ForeignKey("TvEpisodeId")]
     public TvEpisode Episode { get; set; }
     public DateTime Updated { get; set; }
 }

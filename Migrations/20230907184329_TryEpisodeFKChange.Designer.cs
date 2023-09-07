@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace binge_buddy_api.Migrations
 {
     [DbContext(typeof(UserDb))]
-    partial class UserDbModelSnapshot : ModelSnapshot
+    [Migration("20230907184329_TryEpisodeFKChange")]
+    partial class TryEpisodeFKChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -178,7 +181,7 @@ namespace binge_buddy_api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TvEpisodeId")
+                    b.Property<int>("EpisodeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Updated")
@@ -189,7 +192,7 @@ namespace binge_buddy_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TvEpisodeId");
+                    b.HasIndex("EpisodeId");
 
                     b.HasIndex("UserId");
 
@@ -229,7 +232,7 @@ namespace binge_buddy_api.Migrations
                 {
                     b.HasOne("TvEpisode", "Episode")
                         .WithMany()
-                        .HasForeignKey("TvEpisodeId")
+                        .HasForeignKey("EpisodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
