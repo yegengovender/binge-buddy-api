@@ -33,15 +33,15 @@ public class UsersController : ControllerBase
     // GET: api/users/{id}/shows
     [HttpGet()]
     [Route("{id}/shows")]
-    public async Task<User>? GetShow(int id)
+    public async Task<User>? GetUserShow(int id)
     {
-        return await UserService.GetShows(_context, id);
+        return await UserService.GetUserShows(_context, id);
     }
 
     // POST: api/users/{id}/shows
     [HttpPost()]
     [Route("{id}/shows")]
-    public async Task<User>? AddShow(int id, Show show)
+    public async Task<User>? AddUserShow(int id, Show show)
     {
         return await UserService.AddUserShow(_context, id, show);
     }
@@ -49,9 +49,8 @@ public class UsersController : ControllerBase
     // DELETE: api/users/{id}/shows
     [HttpDelete()]
     [Route("{id}/shows/{showId}")]
-    public async Task<User>? RemoveShow(int id, int showId)
+    public async Task<User>? RemoveUserShow(int id, int showId)
     {
         return await UserService.RemoveUserShow(_context, id, showId);
     }
-
 }

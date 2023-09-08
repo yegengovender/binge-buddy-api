@@ -87,7 +87,7 @@ public class UserService
         return user;
     }
 
-    internal static async Task<User> GetShows(UserDb context, int id)
+    internal static async Task<User> GetUserShows(UserDb context, int id)
     {
         var user = await context.Users
         .Include(u => u.UserShows)
