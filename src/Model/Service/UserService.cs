@@ -1,24 +1,36 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-// using TodoApi.Models;
 
-
-[Route("api/[controller]")]
-[ApiController]
-public class TodoItemsController : ControllerBase
+public class UserService
 {
     private readonly UserDb _context;
 
-    public TodoItemsController(UserDb context)
+    public UserService(UserDb context)
     {
         _context = context;
     }
 
-    // GET: api/TodoItems
-    [HttpGet]
-    public async Task<List<TvEpisode>>? GetTodoItems()
+    public async static Task<User>? Login(UserDb context, User user)
     {
-        var episodes = await _context.TvEpisodes.Include(e => e.Show).ToListAsync();
-        return episodes;
+        // Correct credentials
+        var matchingUser = await context.Users
+        .FirstOrDefaultAsync(u => u.Email == user.Email && user.Name == u.Name);
+        if (matchingUser != null)
+        {
+            matchingUser.LoggedIn = true;
+            await context.SaveChangesAsync();
+            return matchingUser;
+        }
+
+        // Inorrect credentials
+        if (await context.Users.AnyAsync(u => u.Email == user.Email || user.Name == u.Name))
+        {
+            return null;
+        }
+
+        // New credentials
+        user.LoggedIn = true;
+        await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
+        return await context.Users.FirstOrDefaultAsync(u => u.Email == user.Email && user.Name == u.Name);
     }
 }
