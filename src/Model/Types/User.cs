@@ -7,7 +7,6 @@ public class User
     public string Name { get; set; } = "";
     public string Email { get; set; } = "";
     public bool LoggedIn { get; set; }
-
     public IEnumerable<UserShow> UserShows { get; set; } = new List<UserShow>();
 }
 
@@ -20,7 +19,6 @@ public class UserShow
     public User User { get; set; }
 
     [ForeignKey("ShowId")]
-    [JsonIgnore]
     public Show Show { get; set; }
 }
 
