@@ -54,7 +54,7 @@ public class ShowsController : ControllerBase
     // POST: api/shows/{id}/episodes
     [HttpPost()]
     [Route("{id}/episodes")]
-    public async Task<Show> AddShowEpisodes(int id, IEnumerable<TvEpisode> episodes)
+    public async Task<Show> AddShowEpisodes(int id, IEnumerable<TvEpisodeRequest> episodes)
     {
         return await ShowsService.AddShowEpisodes(_context, id, episodes);
     }

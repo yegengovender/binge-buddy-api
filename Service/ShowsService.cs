@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 public class ShowsService
@@ -53,7 +54,7 @@ public class ShowsService
         return show.TvEpisodes.ToList();
     }
 
-    internal async static Task<Show> AddShowEpisodes(UserDb context, int id, IEnumerable<TvEpisode> episodes)
+    internal async static Task<Show> AddShowEpisodes(UserDb context, int id, IEnumerable<TvEpisodeRequest> episodes)
     {
         var show = await context.Shows.FirstOrDefaultAsync(us => us.Id == id);
         if (show == null)
@@ -61,8 +62,18 @@ public class ShowsService
             return null;
         }
 
-        episodes.ToList().ForEach(async episode => {
-            episode.ShowId = id;
+        episodes.ToList().ForEach(async episodeReq => {
+            var episode = new TvEpisode(){
+                Name = episodeReq.Name,
+                SeasonId = episodeReq.Season,
+                Number = episodeReq.Number,
+                Airdate = episodeReq.Airdate,
+                Runtime = episodeReq.Runtime,
+                Rating = episodeReq.Rating,
+                Image = episodeReq.Image,
+                Summary = episodeReq.Summary,
+                ShowId = id
+            };
             await context.TvEpisodes.AddAsync(episode);            
         });
         
