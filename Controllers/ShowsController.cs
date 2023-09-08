@@ -30,7 +30,7 @@ public class ShowsController : ControllerBase
     // POST: api/shows/{id}
     [HttpPost()]
     [Route("{id}")]
-    public async Task<Show>? AddShow(Show show)
+    public async Task<Show>? AddShow(ShowRequest show)
     {
         return await ShowsService.AddShow(_context, show);
     }
@@ -59,4 +59,19 @@ public class ShowsController : ControllerBase
         return await ShowsService.AddShowEpisodes(_context, id, episodes);
     }
 
+    // GET: api/shows/{id}/seaspns
+    [HttpGet()]
+    [Route("{id}/seasons")]
+    public async Task<List<Season>> GetShowSeasons(int id)
+    {
+        return await ShowsService.GetShowSeasons(_context, id);
+    }
+
+    // POST: api/shows/{id}/seasons
+    [HttpPost()]
+    [Route("{id}/seasons")]
+    public async Task<Show> AddShowSeasons(int id, IEnumerable<SeasonRequest> seasons)
+    {
+        return await ShowsService.AddShowSeasons(_context, id, seasons);
+    }
 }

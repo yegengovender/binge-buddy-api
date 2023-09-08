@@ -14,9 +14,10 @@ public class UserDb : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TvEpisode>()
-            .HasOne(e=>e.Show)
-            .WithMany(s=>s.TvEpisodes)
-            .HasForeignKey(e=>e.ShowId);
+        modelBuilder
+            .Entity<TvEpisode>()
+            .HasOne(e => e.Show)
+            .WithMany(s => s.TvEpisodes)
+            .HasForeignKey(e => e.ShowId);
     }
 }

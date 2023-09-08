@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 public class Season
 {
     public int Id { get; set; }
+    public int WebId { get; set; }
     public string Url { get; set; } = ""; // : string;
     public int Number { get; set; }
     public string Name { get; set; } = ""; // : string;

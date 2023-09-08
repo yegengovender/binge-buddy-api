@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-// using TodoApi.Models;
-
 
 [Route("api/[controller]")]
 [ApiController]
@@ -41,7 +39,7 @@ public class UsersController : ControllerBase
     // POST: api/users/{id}/shows
     [HttpPost()]
     [Route("{id}/shows")]
-    public async Task<User>? AddUserShow(int id, Show show)
+    public async Task<User>? AddUserShow(int id, ShowRequest show)
     {
         return await UserService.AddUserShow(_context, id, show);
     }

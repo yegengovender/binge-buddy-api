@@ -1,40 +1,15 @@
-
 using Newtonsoft.Json;
 
-public class TvEpisodeRequest {
-    
-    [JsonProperty("id")]
-    public int Id;
-    
-    [JsonProperty("name")]
-    public string Name;
-    
-    [JsonProperty("season")]
-    public int Season;
-    
-    [JsonProperty("number")]
-    public int Number;
-    
-    [JsonProperty("airdate")]
-    public string Airdate;
-    
-    [JsonProperty("runtime")]
-    public int Runtime;
-    
-    [JsonProperty("rating")]
-    public int Rating;
-    
-    [JsonProperty("image")]
-    public string Image;
-    
-    [JsonProperty("summary")]
-    public string Summary;
-    
-    [JsonProperty("showId")]
-    public int ShowId;
-    
-    [JsonProperty("watchedDate")]
-    public DateTime WatchedDate;
-    
-}
-    
+public record TvEpisodeRequest(
+    [property: JsonProperty("id")] int Id,
+    [property: JsonProperty("name")] string Name,
+    [property: JsonProperty("season")] int Season,
+    [property: JsonProperty("number")] int Number,
+    [property: JsonProperty("airdate")] string Airdate,
+    [property: JsonProperty("runtime")] int Runtime,
+    [property: JsonProperty("rating")] float Rating,
+    [property: JsonProperty("image")] string Image,
+    [property: JsonProperty("summary")] string Summary,
+    [property: JsonProperty("showId")] int ShowId,
+    [property: JsonProperty("watchedDate")] DateTime WatchedDate
+);

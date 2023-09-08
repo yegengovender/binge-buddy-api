@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 public class TvEpisode
 {
     public int Id { get; set; }
+    public int WebId { get; set; }
     public string Name { get; set; } = "";
     public int SeasonId { get; set; }
     public int Number { get; set; }
