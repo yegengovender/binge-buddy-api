@@ -1,5 +1,11 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
 // using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,11 +20,86 @@ var connectionString = builder.Configuration.GetConnectionString("SQLiteConnecti
 builder.Services.AddDbContext<UserDb>(opt => opt.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services
+    .AddIdentity<AuthUser, IdentityRole>()
+    .AddEntityFrameworkStores<UserDb>()
+    .AddDefaultTokenProviders();
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = configuration["JWT:ValidAudience"],
+            ValidIssuer = configuration["JWT:ValidIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(configuration["JWT:Secret"])
+            )
+        };
+    });
+
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Binge Buddy API", Version = "v1" });
+    c.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Description =
+                @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        }
+    );
+    c.AddSecurityRequirement(
+        new OpenApiSecurityRequirement()
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    },
+                    Scheme = "oauth2",
+                    Name = "Bearer",
+                    In = ParameterLocation.Header,
+                },
+                new List<string>()
+            }
+        }
+    );
+});
+
+// CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowWebClient",
+        b =>
+        {
+            b.WithOrigins("http://localhost:8080").AllowAnyHeader().AllowAnyMethod();
+        }
+    );
+});
 
 var app = builder.Build();
 
@@ -33,83 +114,12 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-// USER
-app.MapGet("/users", async (UserDb db) =>
-{
-    var users = await db.Users.ToListAsync();
-    return Results.Ok(users);
-});
-
-app.MapPost("/users", async (UserDb db, [FromBody] User user) =>
-{
-    await db.Users.AddAsync(user);
-    await db.SaveChangesAsync();
-    return Results.Created($"/users/{user.Id}", user);
-});
-
-// SHOW
-app.MapGet("/shows", async (UserDb db) =>
-{
-    var shows = await db.Shows
-    .Include(s => s.TvEpisodes)
-    .Include(s => s.Seasons)
-    .ToListAsync();
-    return Results.Ok(shows);
-});
-
-app.MapPost("/shows", async (UserDb db, [FromBody] Show show) =>
-{
-    await db.Shows.AddAsync(show);
-    await db.SaveChangesAsync();
-    return Results.Created($"/shows/{show.Id}", show);
-});
-
-// SEASON
-app.MapGet("/seasons", async (UserDb db) =>
-{
-    var seasons = await db.Seasons.Include(e => e.Show).ToListAsync();
-    return Results.Ok(seasons);
-});
-
-app.MapPost("/seasons", async (UserDb db, [FromBody] Season season) =>
-{
-    var show = await db.Shows.FindAsync(season.ShowId);
-    if (show is null)
-    {
-        return Results.NotFound();
-    }
-
-    season.Show = show;
-    await db.Seasons.AddAsync(season);
-    await db.SaveChangesAsync();
-    return Results.Created($"/seasons/{season.Id}", season);
-});
-
-// EPISODE
-app.MapGet("/episodes", async (UserDb db) =>
-{
-    var episodes = await db.TvEpisodes.Include(e => e.Show).ToListAsync();
-    return Results.Ok(episodes);
-});
-
-app.MapPost("/episodes", async (UserDb db, [FromBody] TvEpisode episode) =>
-{
-    var show = await db.Shows.FindAsync(episode.ShowId);
-    if (show is null)
-    {
-        return Results.NotFound();
-    }
-
-    episode.Show = show;
-    await db.TvEpisodes.AddAsync(episode);
-    await db.SaveChangesAsync();
-    return Results.Created($"/episodes/{episode.Id}", episode);
-});
-
+app.UseCors("AllowAngularDevClient");
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
 
-app.MapGet("/", () => "Hello World!");
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();

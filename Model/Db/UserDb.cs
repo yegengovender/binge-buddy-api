@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class UserDb : DbContext
+public class UserDb : IdentityDbContext<AuthUser>
 {
     public UserDb(DbContextOptions<UserDb> options)
         : base(options) { }
@@ -19,5 +20,7 @@ public class UserDb : DbContext
             .HasOne(e => e.Show)
             .WithMany(s => s.TvEpisodes)
             .HasForeignKey(e => e.ShowId);
+
+        base.OnModelCreating(modelBuilder);
     }
 }
