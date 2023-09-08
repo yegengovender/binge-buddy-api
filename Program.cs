@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.ObjectPool;
-using Microsoft.OpenApi.Models;
-using System;
+// using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +13,8 @@ var configuration = new ConfigurationBuilder()
 var connectionString = builder.Configuration.GetConnectionString("SQLiteConnection");
 builder.Services.AddDbContext<UserDb>(opt => opt.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -107,6 +105,10 @@ app.MapPost("/episodes", async (UserDb db, [FromBody] TvEpisode episode) =>
     await db.SaveChangesAsync();
     return Results.Created($"/episodes/{episode.Id}", episode);
 });
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
 
 // app.MapGet("/users/{id}", async (UserDb db, int id) =>
 // {

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-class UserDb : DbContext
+public class UserDb : DbContext
 {
     public UserDb(DbContextOptions<UserDb> options)
         : base(options) { }
