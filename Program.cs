@@ -114,7 +114,7 @@ using (var scope = app.Services.CreateScope())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseCors("AllowAngularDevClient");
+app.UseCors("AllowWebClient");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

@@ -21,9 +21,15 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var response = await _authenticationService.Login(request);
-
-        return Ok(response);
+        try
+        {
+            var response = await _authenticationService.Login(request);
+            return Ok(response);
+        }
+        catch (Exception e)
+        {
+            return Unauthorized(e.Message);
+        }
     }
 
     [AllowAnonymous]
