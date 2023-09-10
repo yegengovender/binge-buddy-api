@@ -8,10 +8,12 @@ namespace AuthenticationApi.Controllers;
 public class UserController : ControllerBase
 {
     private readonly IAuthenticationService _authenticationService;
+    private readonly UserDb _context;
 
-    public UserController(IAuthenticationService authenticationService)
+    public UserController(IAuthenticationService authenticationService, UserDb userDb)
     {
         _authenticationService = authenticationService;
+        _context = userDb;
     }
 
     [AllowAnonymous]
@@ -40,6 +42,8 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         var response = await _authenticationService.Register(request);
+
+        await UserService.AddUser(_context, request);
 
         return Ok(response);
     }

@@ -2,33 +2,12 @@ using Microsoft.EntityFrameworkCore;
 
 public class UserService
 {
-    public static async Task<User>? Login(UserDb context, User user)
+    internal static async Task<User?> GetUserByName(UserDb context, string username)
     {
-        // Correct credentials
-        var matchingUser = await context.Users
+        return await context.Users
             .Include(u => u.UserShows)
             .ThenInclude(us => us.Show)
-            .FirstOrDefaultAsync(u => u.Email == user.Email && user.Name == u.Name);
-        if (matchingUser != null)
-        {
-            matchingUser.LoggedIn = true;
-            await context.SaveChangesAsync();
-            return matchingUser;
-        }
-
-        // Inorrect credentials
-        if (await context.Users.AnyAsync(u => u.Email == user.Email || user.Name == u.Name))
-        {
-            return null;
-        }
-
-        // New credentials
-        user.LoggedIn = true;
-        await context.Users.AddAsync(user);
-        await context.SaveChangesAsync();
-        return await context.Users.FirstOrDefaultAsync(
-            u => u.Email == user.Email && user.Name == u.Name
-        );
+            .FirstOrDefaultAsync(u => u.Name == username);
     }
 
     internal static async Task<User?> GetUser(UserDb context, int id)
@@ -45,6 +24,21 @@ public class UserService
             .Include(u => u.UserShows)
             .ThenInclude(us => us.Show)
             .ToListAsync();
+    }
+
+    internal static async Task<User> AddUser(UserDb context, RegisterRequest registerRequest)
+    {
+        var user = new User
+        {
+            Name = registerRequest.UserName,
+            Email = registerRequest.Email,
+            LoggedIn = true
+        };
+
+        await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
+
+        return user;
     }
 
     internal static async Task<User> AddUserShow(UserDb context, int id, ShowRequest showRequest)

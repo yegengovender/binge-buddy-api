@@ -12,20 +12,20 @@ public class UsersController : ControllerBase
         _context = context;
     }
 
-    // POST: api/users/login
-    [HttpPost]
-    [Route("login")]
-    public async Task<User>? Login(User user)
-    {
-        return await UserService.Login(_context, user);
-    }
-
     // GET: api/users
     [HttpGet()]
     [Route("")]
-    public async Task<List<User>>? GetUsers(int id)
+    public async Task<List<User>>? GetUsers()
     {
         return await UserService.GetUsers(_context);
+    }
+
+    // GET: api/users/{username}
+    [HttpGet()]
+    [Route("{username}")]
+    public async Task<User>? GetUsers(string username)
+    {
+        return await UserService.GetUserByName(_context, username);
     }
 
     // GET: api/users/{id}/shows

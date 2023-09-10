@@ -10,7 +10,7 @@ public record ShowRequest(
     [property: JsonProperty("rating")] int Rating,
     [property: JsonProperty("image")] string Image,
     [property: JsonProperty("imageLarge")] string ImageLarge,
-    [property: JsonProperty("episodes")] IEnumerable<TvEpisode> Episodes,
-    [property: JsonProperty("seasons")] IEnumerable<Season> Seasons,
-    [property: JsonProperty("nextEpisode")] TvEpisode NextEpisode
+    [property: JsonProperty("episodes")] IEnumerable<TvEpisodeRequest> Episodes,
+    [property: JsonProperty("seasons")] IEnumerable<SeasonRequest> Seasons,
+    [property: JsonProperty("nextEpisode")] TvEpisodeRequest NextEpisode
 );
