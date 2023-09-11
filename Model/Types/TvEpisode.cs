@@ -9,7 +9,7 @@ public class TvEpisode
     public int SeasonId { get; set; }
     public int Number { get; set; }
     public string Airdate { get; set; } = "";
-    public float Runtime { get; set; }
+    public int Runtime { get; set; }
     public float Rating { get; set; }
     public string Image { get; set; } = "";
     public string Summary { get; set; } = "";

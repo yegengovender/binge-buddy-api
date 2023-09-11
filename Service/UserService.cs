@@ -56,7 +56,39 @@ public class UserService
         }
 
         Show show = ShowsService.TransformRequest.ToShowObject(showRequest);
-        await context.Shows.AddAsync(show);
+        List<TvEpisode> tvEpisodes = showRequest.Episodes
+            .Select(e => ShowsService.TransformRequest.ToTvEpisode(show.Id, e))
+            .ToList();
+        tvEpisodes.ForEach(async e =>
+        {
+            if (!await context.TvEpisodes.AnyAsync(episode => episode.WebId == e.Id))
+            {
+                await context.TvEpisodes.AddAsync(e);
+            }
+        });
+        show.TvEpisodes = tvEpisodes;
+
+        List<Season> seasons = showRequest.Seasons
+            .Select(s => ShowsService.TransformRequest.ToSeason(show.Id, s))
+            .ToList();
+        seasons.ForEach(async s =>
+        {
+            if (!await context.Seasons.AnyAsync(season => season.WebId == s.Id))
+            {
+                await context.Seasons.AddAsync(s);
+            }
+        });
+        show.Seasons = seasons;
+
+        show.NextEpisode = ShowsService.TransformRequest.ToTvEpisode(
+            show.Id,
+            showRequest.NextEpisode
+        );
+
+        if (!await context.Shows.AnyAsync(s => s.Id == show.Id))
+        {
+            await context.Shows.AddAsync(show);
+        }
         await context.SaveChangesAsync();
 
         await context.UserShows.AddAsync(new UserShow { User = user, Show = show });
@@ -84,11 +116,15 @@ public class UserService
         return user;
     }
 
-    internal static async Task<User> GetUserShows(UserDb context, int id)
+    internal static async Task<List<ShowRequest>> GetUserShows(UserDb context, int id)
     {
         var user = await context.Users
             .Include(u => u.UserShows)
             .ThenInclude(us => us.Show)
+            .ThenInclude(s => s.TvEpisodes)
+            .Include(u => u.UserShows)
+            .ThenInclude(us => us.Show)
+            .ThenInclude(s => s.Seasons)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         if (user == null)
@@ -96,6 +132,15 @@ public class UserService
             return null;
         }
 
-        return user;
+        return user.UserShows
+            .Select(
+                us =>
+                    ShowsService.TransformResponse.ToShowObject(
+                        us.Show,
+                        us.Show.TvEpisodes.ToList(),
+                        us.Show.Seasons.ToList()
+                    )
+            )
+            .ToList();
     }
 }

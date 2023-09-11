@@ -7,7 +7,7 @@ public record ShowRequest(
     [property: JsonProperty("summary")] string Summary,
     [property: JsonProperty("status")] string Status,
     [property: JsonProperty("premiered")] string Premiered,
-    [property: JsonProperty("rating")] int Rating,
+    [property: JsonProperty("rating")] float Rating,
     [property: JsonProperty("image")] string Image,
     [property: JsonProperty("imageLarge")] string ImageLarge,
     [property: JsonProperty("episodes")] IEnumerable<TvEpisodeRequest> Episodes,

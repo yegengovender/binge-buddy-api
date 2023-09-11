@@ -31,7 +31,7 @@ public class UsersController : ControllerBase
     // GET: api/users/{id}/shows
     [HttpGet()]
     [Route("{id}/shows")]
-    public async Task<User>? GetUserShow(int id)
+    public async Task<List<ShowRequest>>? GetUserShow(int id)
     {
         return await UserService.GetUserShows(_context, id);
     }
