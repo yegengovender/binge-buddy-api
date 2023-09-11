@@ -327,7 +327,8 @@ namespace binge_buddy_api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("WatchedDate")
+                    b.Property<string>("WatchedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("WebId")
@@ -395,14 +396,14 @@ namespace binge_buddy_api.Migrations
                     b.Property<DateTime>("Updated")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserShowId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TvEpisodeId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserShowId");
 
                     b.ToTable("UserShowActivity");
                 });
@@ -507,15 +508,15 @@ namespace binge_buddy_api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("User", "User")
+                    b.HasOne("UserShow", "UserShow")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserShowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Episode");
 
-                    b.Navigation("User");
+                    b.Navigation("UserShow");
                 });
 
             modelBuilder.Entity("Show", b =>

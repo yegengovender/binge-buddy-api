@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace binge_buddy_api.Migrations
 {
     [DbContext(typeof(UserDb))]
-    [Migration("20230908192914_Authentication")]
-    partial class Authentication
+    [Migration("20230911175459_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -238,10 +238,6 @@ namespace binge_buddy_api.Migrations
                     b.Property<int>("ShowId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("WebId")
                         .HasColumnType("INTEGER");
 
@@ -321,8 +317,8 @@ namespace binge_buddy_api.Migrations
                     b.Property<float>("Rating")
                         .HasColumnType("REAL");
 
-                    b.Property<float>("Runtime")
-                        .HasColumnType("REAL");
+                    b.Property<int>("Runtime")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("SeasonId")
                         .HasColumnType("INTEGER");
@@ -403,14 +399,14 @@ namespace binge_buddy_api.Migrations
                     b.Property<DateTime>("Updated")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserShowId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TvEpisodeId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserShowId");
 
                     b.ToTable("UserShowActivity");
                 });
@@ -515,15 +511,15 @@ namespace binge_buddy_api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("User", "User")
+                    b.HasOne("UserShow", "UserShow")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserShowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Episode");
 
-                    b.Navigation("User");
+                    b.Navigation("UserShow");
                 });
 
             modelBuilder.Entity("Show", b =>

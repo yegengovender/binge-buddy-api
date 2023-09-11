@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace binge_buddy_api.Migrations
 {
     /// <inheritdoc />
-    public partial class Authentication : Migration
+    public partial class InitDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,42 @@ namespace binge_buddy_api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Shows",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    WebId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Language = table.Column<string>(type: "TEXT", nullable: false),
+                    Summary = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<string>(type: "TEXT", nullable: false),
+                    Premiered = table.Column<string>(type: "TEXT", nullable: false),
+                    Rating = table.Column<float>(type: "REAL", nullable: false),
+                    Image = table.Column<string>(type: "TEXT", nullable: false),
+                    ImageLarge = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shows", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    LoggedIn = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +192,113 @@ namespace binge_buddy_api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Seasons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    WebId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Number = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    EpisodeOrder = table.Column<int>(type: "INTEGER", nullable: false),
+                    PremiereDate = table.Column<string>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<string>(type: "TEXT", nullable: false),
+                    ShowId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Seasons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Seasons_Shows_ShowId",
+                        column: x => x.ShowId,
+                        principalTable: "Shows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TvEpisodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    WebId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    SeasonId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Number = table.Column<int>(type: "INTEGER", nullable: false),
+                    Airdate = table.Column<string>(type: "TEXT", nullable: false),
+                    Runtime = table.Column<int>(type: "INTEGER", nullable: false),
+                    Rating = table.Column<float>(type: "REAL", nullable: false),
+                    Image = table.Column<string>(type: "TEXT", nullable: false),
+                    Summary = table.Column<string>(type: "TEXT", nullable: false),
+                    ShowId = table.Column<int>(type: "INTEGER", nullable: false),
+                    WatchedDate = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TvEpisodes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TvEpisodes_Shows_ShowId",
+                        column: x => x.ShowId,
+                        principalTable: "Shows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserShows",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ShowId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserShows", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserShows_Shows_ShowId",
+                        column: x => x.ShowId,
+                        principalTable: "Shows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserShows_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserShowActivity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserShowId = table.Column<int>(type: "INTEGER", nullable: false),
+                    TvEpisodeId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Updated = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserShowActivity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserShowActivity_TvEpisodes_TvEpisodeId",
+                        column: x => x.TvEpisodeId,
+                        principalTable: "TvEpisodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserShowActivity_UserShows_UserShowId",
+                        column: x => x.UserShowId,
+                        principalTable: "UserShows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -192,6 +335,36 @@ namespace binge_buddy_api.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Seasons_ShowId",
+                table: "Seasons",
+                column: "ShowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TvEpisodes_ShowId",
+                table: "TvEpisodes",
+                column: "ShowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserShowActivity_TvEpisodeId",
+                table: "UserShowActivity",
+                column: "TvEpisodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserShowActivity_UserShowId",
+                table: "UserShowActivity",
+                column: "UserShowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserShows_ShowId",
+                table: "UserShows",
+                column: "ShowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserShows_UserId",
+                table: "UserShows",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -213,10 +386,28 @@ namespace binge_buddy_api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Seasons");
+
+            migrationBuilder.DropTable(
+                name: "UserShowActivity");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "TvEpisodes");
+
+            migrationBuilder.DropTable(
+                name: "UserShows");
+
+            migrationBuilder.DropTable(
+                name: "Shows");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }
