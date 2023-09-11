@@ -10,6 +10,5 @@ public record TvEpisodeRequest(
     [property: JsonProperty("rating")] float Rating,
     [property: JsonProperty("image")] string Image,
     [property: JsonProperty("summary")] string Summary,
-    [property: JsonProperty("showId")] int ShowId,
-    [property: JsonProperty("watchedDate")] string? WatchedDate
+    [property: JsonProperty("showId")] int ShowId
 );

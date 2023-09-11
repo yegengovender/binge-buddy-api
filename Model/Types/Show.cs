@@ -14,6 +14,6 @@ public class Show
     public string ImageLarge { get; set; } = "";
     [NotMapped]
     public TvEpisode? NextEpisode { get; set; }
-    public IEnumerable<TvEpisode?> TvEpisodes { get; set; }
-    public IEnumerable<Season> Seasons { get; set; }
+    public IEnumerable<TvEpisode> TvEpisodes { get; set; } = new List<TvEpisode>();
+    public IEnumerable<Season> Seasons { get; set; } = new List<Season>();
 }

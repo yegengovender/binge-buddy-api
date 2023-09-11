@@ -38,8 +38,7 @@ public partial class ShowsService
                 Rating = episodeReq.Rating,
                 Image = episodeReq.Image,
                 Summary = episodeReq.Summary,
-                ShowId = showId,
-                WatchedDate = episodeReq.WatchedDate
+                ShowId = showId
             };
         }
 

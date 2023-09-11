@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 public class TvEpisode
 {
@@ -17,7 +17,4 @@ public class TvEpisode
     [ForeignKey("ShowId")]
     [JsonIgnore]
     public Show Show { get; set; }
-
-    [JsonIgnore]
-    public string WatchedDate { get; set; }
 }

@@ -15,7 +15,7 @@ public class UsersController : ControllerBase
     // GET: api/users
     [HttpGet()]
     [Route("")]
-    public async Task<List<User>>? GetUsers()
+    public async Task<List<UserRequest>>? GetUsers()
     {
         return await UserService.GetUsers(_context);
     }
@@ -23,7 +23,7 @@ public class UsersController : ControllerBase
     // GET: api/users/{username}
     [HttpGet()]
     [Route("{username}")]
-    public async Task<User>? GetUsers(string username)
+    public async Task<UserRequest>? GetUsers(string username)
     {
         return await UserService.GetUserByName(_context, username);
     }
@@ -39,7 +39,7 @@ public class UsersController : ControllerBase
     // POST: api/users/{id}/shows
     [HttpPost()]
     [Route("{id}/shows")]
-    public async Task<User>? AddUserShow(int id, ShowRequest show)
+    public async Task<UserRequest>? AddUserShow(int id, ShowRequest show)
     {
         return await UserService.AddUserShow(_context, id, show);
     }
@@ -47,14 +47,14 @@ public class UsersController : ControllerBase
     // DELETE: api/users/{id}/shows
     [HttpDelete()]
     [Route("{id}/shows/{showId}")]
-    public async Task<User>? RemoveUserShow(int id, int showId)
+    public async Task<UserRequest>? RemoveUserShow(int id, int showId)
     {
         return await UserService.RemoveUserShow(_context, id, showId);
     }
 
     [HttpPost()]
     [Route("{userId}/watched/{episodeId}")]
-    public async Task<User>? UpdateUser(int userId, int episodeId, bool isWatched)
+    public async Task<UserRequest>? UpdateUser(int userId, int episodeId, bool isWatched)
     {
         return await UserShowsService.WatchedEpisode(_context, userId, episodeId, isWatched);
     }

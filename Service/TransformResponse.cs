@@ -2,6 +2,38 @@ public partial class ShowsService
 {
     internal class TransformResponse
     {
+        internal static UserRequest ToUser(User user, List<UserShow> userShows)
+        {
+            return new(
+                user.Id,
+                user.Name,
+                user.Email,
+                user.LoggedIn,
+                userShows
+                    .Select(
+                        us =>
+                            ToShowObject(
+                                us.Show,
+                                us.Show.TvEpisodes.ToList(),
+                                us.Show.Seasons.ToList()
+                            )
+                    )
+                    .ToList(),
+                userShows.Select(us => ToUserShow(us)).ToList()
+            );
+        }
+
+        internal static UserShowRequest ToUserShow(UserShow userShow)
+        {
+            return new(
+                userShow.Show.WebId,
+                userShow.UserShowActivities
+                    .Select(u => u.Episode.WebId)
+                    .ToList(),
+                null
+            );
+        }
+
         internal static ShowRequest ToShowObject(
             Show show,
             List<TvEpisode> episodes,
@@ -26,7 +58,8 @@ public partial class ShowsService
 
         internal static TvEpisodeRequest? ToTvEpisode(int showId, TvEpisode? episode)
         {
-            if(episode == null) {
+            if (episode == null)
+            {
                 return null;
             }
             return new(
@@ -39,8 +72,7 @@ public partial class ShowsService
                 episode.Rating,
                 episode.Image,
                 episode.Summary,
-                showId,
-                episode.WatchedDate
+                showId
             );
         }
 

@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 public class UserShow
 {
@@ -11,4 +11,6 @@ public class UserShow
 
     [ForeignKey("ShowId")]
     public Show Show { get; set; }
+
+    public IEnumerable<UserShowActivity>? UserShowActivities { get; set; }
 }
