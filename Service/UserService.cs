@@ -56,7 +56,7 @@ public class UserService
         }
 
         Show show = ShowsService.TransformRequest.ToShowObject(showRequest);
-        List<TvEpisode> tvEpisodes = showRequest.Episodes
+        List<TvEpisode?> tvEpisodes = showRequest.Episodes
             .Select(e => ShowsService.TransformRequest.ToTvEpisode(show.Id, e))
             .ToList();
         tvEpisodes.ForEach(async e =>
