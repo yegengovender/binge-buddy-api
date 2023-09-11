@@ -51,4 +51,11 @@ public class UsersController : ControllerBase
     {
         return await UserService.RemoveUserShow(_context, id, showId);
     }
+
+    [HttpPost()]
+    [Route("{userId}/watched/{episodeId}")]
+    public async Task<User>? UpdateUser(int userId, int episodeId, bool isWatched)
+    {
+        return await UserShowsService.WatchedEpisode(_context, userId, episodeId, isWatched);
+    }
 }

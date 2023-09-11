@@ -19,5 +19,5 @@ public class TvEpisode
     public Show Show { get; set; }
 
     [JsonIgnore]
-    public DateTime? WatchedDate { get; set; }
+    public string WatchedDate { get; set; }
 }

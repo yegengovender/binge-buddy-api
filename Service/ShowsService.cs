@@ -1,21 +1,20 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 public partial class ShowsService
 {
-    internal static async Task<Show?> GetShow(UserDb context, int id)
+    internal static async Task<Show?> GetShow(UserDb context, int showId)
     {
         return await context.Shows
-            .Include(u => u.TvEpisodes)
-            .Include(us => us.Seasons)
-            .FirstOrDefaultAsync(u => u.Id == id);
+            .Include(show => show.TvEpisodes)
+            .Include(show => show.Seasons)
+            .FirstOrDefaultAsync(show => show.Id == showId);
     }
 
     internal static async Task<List<Show>>? GetShows(UserDb context)
     {
         return await context.Shows
-            .Include(u => u.TvEpisodes)
-            .Include(us => us.Seasons)
+            .Include(show => show.TvEpisodes)
+            .Include(show => show.Seasons)
             .ToListAsync();
     }
 
@@ -42,11 +41,11 @@ public partial class ShowsService
         return show;
     }
 
-    internal static async Task<List<TvEpisode>> GetShowEpisodes(UserDb context, int id)
+    internal static async Task<List<TvEpisode?>> GetShowEpisodes(UserDb context, int showId)
     {
         var show = await context.Shows
-            .Include(s => s.TvEpisodes)
-            .FirstOrDefaultAsync(s => s.Id == id);
+            .Include(show => show.TvEpisodes)
+            .FirstOrDefaultAsync(show => show.Id == showId);
         if (show == null)
         {
             return null;
@@ -57,11 +56,11 @@ public partial class ShowsService
 
     internal static async Task<Show> AddShowEpisodes(
         UserDb context,
-        int id,
+        int showId,
         IEnumerable<TvEpisodeRequest> episodes
     )
     {
-        var show = await context.Shows.FindAsync(id);
+        var show = await context.Shows.FindAsync(showId);
         if (show == null)
         {
             return null;
@@ -71,7 +70,7 @@ public partial class ShowsService
             .ToList()
             .ForEach(async episodeReq =>
             {
-                TvEpisode episode = TransformRequest.ToTvEpisode(id, episodeReq);
+                TvEpisode episode = TransformRequest.ToTvEpisode(showId, episodeReq);
                 await context.TvEpisodes.AddAsync(episode);
             });
 
@@ -79,9 +78,11 @@ public partial class ShowsService
         return show;
     }
 
-    internal static async Task<List<Season>> GetShowSeasons(UserDb context, int id)
+    internal static async Task<List<Season>> GetShowSeasons(UserDb context, int showId)
     {
-        var show = await context.Shows.Include(s => s.Seasons).FirstOrDefaultAsync(s => s.Id == id);
+        var show = await context.Shows
+            .Include(s => s.Seasons)
+            .FirstOrDefaultAsync(s => s.Id == showId);
         if (show == null)
         {
             return null;
@@ -92,11 +93,11 @@ public partial class ShowsService
 
     internal static async Task<Show> AddShowSeasons(
         UserDb context,
-        int id,
+        int showId,
         IEnumerable<SeasonRequest> seasons
     )
     {
-        var show = await context.Shows.FindAsync(id);
+        var show = await context.Shows.FindAsync(showId);
         if (show == null)
         {
             return null;
@@ -106,7 +107,7 @@ public partial class ShowsService
             .ToList()
             .ForEach(async seasonReq =>
             {
-                Season season = TransformRequest.ToSeason(id, seasonReq);
+                Season season = TransformRequest.ToSeason(showId, seasonReq);
                 await context.Seasons.AddAsync(season);
             });
 

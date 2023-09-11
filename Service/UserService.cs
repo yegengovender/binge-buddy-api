@@ -55,6 +55,29 @@ public class UserService
             return user;
         }
 
+        Show show = StoreEpisodesAndSeasons(context, showRequest);
+
+        // Add to Shows table
+        if (!await context.Shows.AnyAsync(s => s.Id == show.Id))
+        {
+            await context.Shows.AddAsync(show);
+        }
+        await context.SaveChangesAsync();
+
+        // Add to UserShows table
+        if (!await context.UserShows.AnyAsync(us => us.Show.Id == show.Id && us.User.Id == user.Id))
+        {
+            await context.UserShows.AddAsync(new UserShow { User = user, Show = show });
+        }
+
+        await context.UserShows.AddAsync(new UserShow { User = user, Show = show });
+        await context.SaveChangesAsync();
+        return user;
+    }
+
+    private static Show StoreEpisodesAndSeasons(UserDb context, ShowRequest showRequest)
+    {
+        // Store Episodes
         Show show = ShowsService.TransformRequest.ToShowObject(showRequest);
         List<TvEpisode?> tvEpisodes = showRequest.Episodes
             .Select(e => ShowsService.TransformRequest.ToTvEpisode(show.Id, e))
@@ -68,6 +91,7 @@ public class UserService
         });
         show.TvEpisodes = tvEpisodes;
 
+        // Store Seasons
         List<Season> seasons = showRequest.Seasons
             .Select(s => ShowsService.TransformRequest.ToSeason(show.Id, s))
             .ToList();
@@ -80,23 +104,15 @@ public class UserService
         });
         show.Seasons = seasons;
 
+        // Store Next Episode
         show.NextEpisode = ShowsService.TransformRequest.ToTvEpisode(
             show.Id,
             showRequest.NextEpisode
         );
-
-        if (!await context.Shows.AnyAsync(s => s.Id == show.Id))
-        {
-            await context.Shows.AddAsync(show);
-        }
-        await context.SaveChangesAsync();
-
-        await context.UserShows.AddAsync(new UserShow { User = user, Show = show });
-        await context.SaveChangesAsync();
-        return user;
+        return show;
     }
 
-    internal static async Task<User> RemoveUserShow(UserDb context, int id, int showId)
+    internal static async Task<User?> RemoveUserShow(UserDb context, int id, int showId)
     {
         var user = await GetUser(context, id);
         if (user == null)
