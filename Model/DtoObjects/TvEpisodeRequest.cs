@@ -11,5 +11,5 @@ public record TvEpisodeRequest(
     [property: JsonProperty("image")] string Image,
     [property: JsonProperty("summary")] string Summary,
     [property: JsonProperty("showId")] int ShowId,
-    [property: JsonProperty("watchedDate")] DateTime WatchedDate
+    [property: JsonProperty("watchedDate")] DateTime? WatchedDate
 );

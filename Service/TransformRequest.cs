@@ -14,14 +14,19 @@ public partial class ShowsService
                 Premiered = showRequest.Premiered,
                 Rating = showRequest.Rating,
                 Image = showRequest.Image,
-                ImageLarge = showRequest.ImageLarge
+                ImageLarge = showRequest.ImageLarge,
+                NextEpisode = ToTvEpisode(showRequest.Id, showRequest.NextEpisode)
             };
 
             return show;
         }
 
-        internal static TvEpisode ToTvEpisode(int id, TvEpisodeRequest episodeReq)
+        internal static TvEpisode? ToTvEpisode(int showId, TvEpisodeRequest? episodeReq)
         {
+            if (episodeReq == null)
+            {
+                return null;
+            }
             return new TvEpisode()
             {
                 WebId = episodeReq.Id,
@@ -33,7 +38,8 @@ public partial class ShowsService
                 Rating = episodeReq.Rating,
                 Image = episodeReq.Image,
                 Summary = episodeReq.Summary,
-                ShowId = id
+                ShowId = showId,
+                WatchedDate = episodeReq.WatchedDate
             };
         }
 

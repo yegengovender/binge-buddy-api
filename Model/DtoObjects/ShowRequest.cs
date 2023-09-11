@@ -12,5 +12,5 @@ public record ShowRequest(
     [property: JsonProperty("imageLarge")] string ImageLarge,
     [property: JsonProperty("episodes")] IEnumerable<TvEpisodeRequest> Episodes,
     [property: JsonProperty("seasons")] IEnumerable<SeasonRequest> Seasons,
-    [property: JsonProperty("nextEpisode")] TvEpisodeRequest NextEpisode
+    [property: JsonProperty("nextEpisode")] TvEpisodeRequest? NextEpisode
 );

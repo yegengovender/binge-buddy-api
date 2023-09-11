@@ -24,7 +24,7 @@ public partial class ShowsService
             );
         }
 
-        internal static TvEpisodeRequest? ToTvEpisode(int showId, TvEpisode episode)
+        internal static TvEpisodeRequest? ToTvEpisode(int showId, TvEpisode? episode)
         {
             if(episode == null) {
                 return null;
@@ -40,7 +40,7 @@ public partial class ShowsService
                 episode.Image,
                 episode.Summary,
                 showId,
-                new DateTime()
+                episode.WatchedDate
             );
         }
 
