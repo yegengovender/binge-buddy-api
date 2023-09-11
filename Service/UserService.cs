@@ -99,7 +99,7 @@ public class UserService
             return null;
         }
 
-        var userShow = user.UserShows.FirstOrDefault(us => us.Show.Id == showId);
+        var userShow = user.UserShows.FirstOrDefault(us => us.Show.WebId == showId);
         if (userShow == null)
         {
             return ShowsService.TransformResponse.ToUser(user, user.UserShows.ToList());
