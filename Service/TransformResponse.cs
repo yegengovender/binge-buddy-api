@@ -50,13 +50,13 @@ public partial class ShowsService
                 show.Rating,
                 show.Image,
                 show.ImageLarge,
-                episodes.Select(e => ToTvEpisode(show.Id, e)).ToList(),
+                episodes.Select(e => ToTvEpisode(show, e)).ToList(),
                 seasons.Select(s => ToSeason(show.Id, s)).ToList(),
-                ToTvEpisode(show.Id, show.NextEpisode)
+                ToTvEpisode(show, show.NextEpisode)
             );
         }
 
-        internal static TvEpisodeRequest? ToTvEpisode(int showId, TvEpisode? episode)
+        internal static TvEpisodeRequest? ToTvEpisode(Show show, TvEpisode? episode)
         {
             if (episode == null)
             {
@@ -72,7 +72,7 @@ public partial class ShowsService
                 episode.Rating,
                 episode.Image,
                 episode.Summary,
-                showId
+                show.WebId
             );
         }
 
