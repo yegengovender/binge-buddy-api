@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "qTtzIopaI4JOJ+L5ZNmKStuXLaNX3DN9tXh2vPA9K3s=",
+  "Source": "binge-buddy-api",
+  "BasePath": "_content/binge-buddy-api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
